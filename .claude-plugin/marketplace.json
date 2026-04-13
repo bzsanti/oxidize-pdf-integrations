@@ -1,0 +1,19 @@
+{
+  "name": "oxidize-pdf",
+  "owner": {
+    "name": "BelowZero"
+  },
+  "metadata": {
+    "description": "PDF manipulation tools powered by oxidize-pdf (Rust core + Python bridge)"
+  },
+  "plugins": [
+    {
+      "name": "oxidize-pdf",
+      "source": "./claude-code",
+      "description": "PDF reading, creation, analysis, manipulation, and security for Claude Code",
+      "version": "1.0.0",
+      "keywords": ["pdf", "document", "analysis", "creation", "manipulation"],
+      "category": "tools"
+    }
+  ]
+}

@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Bootstrap script for oxidize-pdf MCP server.
+# Modes:
+#   check  — verify oxidize-pdf is available, install if needed (SessionStart hook)
+#   serve  — launch the MCP server with the correct Python environment
+
+PLUGIN_DATA="${OXIDIZE_PLUGIN_DATA:-${CLAUDE_PLUGIN_DATA:-}}"
+VENV_DIR="${PLUGIN_DATA}/venv"
+
+find_python() {
+    if command -v python3 &>/dev/null; then
+        echo "python3"
+    elif command -v python &>/dev/null; then
+        echo "python"
+    else
+        echo ""
+    fi
+}
+
+has_oxidize() {
+    local py="$1"
+    "$py" -c "import oxidize_pdf" &>/dev/null 2>&1
+}
+
+ensure_venv() {
+    local py="$1"
+    if [ ! -d "$VENV_DIR" ]; then
+        echo "[oxidize-pdf] Installing into plugin environment..."
+        "$py" -m venv "$VENV_DIR"
+    fi
+    "$VENV_DIR/bin/pip" install --quiet --upgrade oxidize-pdf
+}
+
+PYTHON=$(find_python)
+if [ -z "$PYTHON" ]; then
+    echo "[oxidize-pdf] ERROR: Python 3.10+ is required but not found in PATH."
+    exit 1
+fi
+
+MODE="${1:-serve}"
+
+if [ "$MODE" = "check" ]; then
+    if has_oxidize "$PYTHON"; then
+        echo "[oxidize-pdf] Found in current environment."
+        exit 0
+    fi
+    if [ -n "$PLUGIN_DATA" ]; then
+        if [ -d "$VENV_DIR" ] && has_oxidize "$VENV_DIR/bin/python"; then
+            echo "[oxidize-pdf] Found in plugin environment."
+            exit 0
+        fi
+        ensure_venv "$PYTHON"
+        echo "[oxidize-pdf] Installed in plugin environment."
+        exit 0
+    fi
+    echo "[oxidize-pdf] Not found. Install with: pip install oxidize-pdf"
+    exit 1
+fi
+
+if [ "$MODE" = "serve" ]; then
+    if has_oxidize "$PYTHON"; then
+        exec "$PYTHON" -c "from oxidize_pdf.mcp.server import run; run()"
+    fi
+    if [ -n "$PLUGIN_DATA" ] && [ -d "$VENV_DIR" ] && has_oxidize "$VENV_DIR/bin/python"; then
+        exec "$VENV_DIR/bin/python" -c "from oxidize_pdf.mcp.server import run; run()"
+    fi
+    echo "[oxidize-pdf] ERROR: oxidize-pdf not found. Run '/oxidize-pdf:read-pdf' to trigger setup or install manually: pip install oxidize-pdf"
+    exit 1
+fi
+
+echo "[oxidize-pdf] Unknown mode: $MODE. Use 'check' or 'serve'."
+exit 1

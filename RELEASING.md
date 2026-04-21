@@ -81,6 +81,13 @@ Minimum responsibilities:
 - Publish to the target channel (PyPI trusted publisher, GitHub release, ...)
 - Fail loudly on tag/manifest version mismatch
 
+### Current workflows
+
+| Integration | Test workflow | Release workflow |
+|---|---|---|
+| LlamaIndex reader | `.github/workflows/test-llamaindex.yml` (matrix 3.10–3.13, runs on PRs touching `llamaindex/**`) | `.github/workflows/release-llamaindex.yml` (triggered by `llamaindex-v*` tags, publishes to PyPI via OIDC) |
+| Claude Code plugin | — (no CI yet) | — (distributed via self-hosted marketplace; no PyPI publish) |
+
 ### Pre-flight checklist (before tagging any release)
 
 1. Manifest version (`plugin.json` / `pyproject.toml`) matches the tag you are about to push.

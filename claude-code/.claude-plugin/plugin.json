@@ -1,6 +1,6 @@
 {
   "name": "oxidize-pdf",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "PDF reading, creation, analysis, manipulation, and security powered by oxidize-pdf",
   "author": {
     "name": "BelowZero",

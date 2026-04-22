@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "llama-index-readers-oxidize-pdf"
-version = "0.1.0"
-description = "LlamaIndex reader for oxidize-pdf — fast, Rust-powered PDF parsing with RAG-ready chunking"
+version = "0.1.1"
+description = "LlamaIndex reader for oxidize-pdf — fast, Rust-powered PDF parsing with element-disjoint RAG chunking"
 readme = "README.md"
 requires-python = ">=3.10,<4.0"
 license = { text = "MIT" }
@@ -27,7 +27,11 @@ classifiers = [
 ]
 dependencies = [
     "llama-index-core>=0.13.0,<0.15",
-    "oxidize-pdf>=0.4.2",
+    # 0.4.3 ships oxidize-pdf-core 2.5.5, which fixes the HybridChunker
+    # overlap branch that made `rag_chunks()` emit accumulating
+    # (non-disjoint) chunks. 0.1.1 of this reader requires the fix —
+    # any 0.4.x ≥ 0.4.3 is acceptable.
+    "oxidize-pdf>=0.4.3",
 ]
 
 [project.urls]

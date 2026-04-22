@@ -3,6 +3,18 @@
 This repo hosts multiple integrations; each section is scoped per integration.
 See [RELEASING.md](./RELEASING.md) for tag and versioning conventions.
 
+## [llamaindex-v0.1.1] - 2026-04-22
+
+### Fixed
+- **`mode="rag"` now emits element-disjoint `Document` lists.** 0.1.0 inherited a bug from `oxidize-pdf-core` 2.5.4's `HybridChunker`: the overlap branch re-injected just-flushed elements into the working buffer, so each chunk i+1 contained chunk i as a prefix (quadratic accumulation). Audit on real PDFs in 0.1.0 produced output where a single source paragraph appeared in 3+ `Document`s, breaking de-duplication and embedding budgets in downstream RAG pipelines. 0.1.1 requires `oxidize-pdf>=0.4.3` (which pins `oxidize-pdf-core 2.5.5`, where the chunker fix lives) and adds 7 semantic regression tests in `tests/test_reader_disjoint.py` that build known PDFs and assert pairwise substring-containment is impossible and each source marker appears in exactly one `Document`.
+
+### Changed
+- Bumped minimum `oxidize-pdf` dependency from `>=0.4.2` to `>=0.4.3`.
+- README updated to describe the disjointness guarantee and document the 0.1.0 regression.
+
+### Note
+- 0.1.0 was published with shape-only tests (the metadata fields existed; the chunk content was never inspected). 0.1.1 is the first release where the RAG-ready claim is backed by semantic regression tests in both this reader and the underlying bridge. **0.1.0 users should upgrade.**
+
 ## [llamaindex-v0.1.0] - 2026-04-21
 
 ### Added

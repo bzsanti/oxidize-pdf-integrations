@@ -2,6 +2,14 @@
 
 LlamaIndex reader backed by [oxidize-pdf](https://github.com/bzsanti/oxidize-python), a fast Rust-powered PDF engine with first-class RAG chunking.
 
+> **0.1.1 (2026-04-22)** — Requires `oxidize-pdf>=0.4.3` (oxidize-pdf-core 2.5.5).
+> Fixes a regression carried by 0.1.0: the underlying `HybridChunker` in
+> oxidize-pdf-core 2.5.4 re-injected just-flushed elements through its
+> overlap branch, so each `Document` produced by `mode="rag"` contained
+> the previous one as a prefix (quadratic accumulation). 0.1.1 is the
+> first release where the disjointness contract is verified end-to-end
+> by semantic regression tests; **0.1.0 should not be used for RAG ingestion**.
+
 ## Install
 
 ```bash
@@ -54,7 +62,7 @@ print(doc.text)
 ## Why oxidize-pdf
 
 - **Rust parser**: fast on large PDFs, low memory footprint.
-- **Native RAG primitives**: semantic chunking, element partitioning, heading-aware context — no post-processing needed.
+- **Native RAG primitives**: element-disjoint semantic chunking, element partitioning, heading-aware context — no post-processing needed. The disjointness contract (no chunk's text is a substring of another's; each source element appears in exactly one chunk) is enforced by regression tests in both this reader and the underlying bridge.
 - **CJK friendly**: compact output for multibyte documents (see oxidize-pdf 2.5.4 subsetter fixes).
 - **Pure Python install**: ships as a wheel for Linux/macOS/Windows via the `oxidize-pdf` package; no system dependencies.
 

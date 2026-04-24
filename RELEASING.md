@@ -86,6 +86,7 @@ Minimum responsibilities:
 | Integration | Test workflow | Release workflow |
 |---|---|---|
 | LlamaIndex reader | `.github/workflows/test-llamaindex.yml` (matrix 3.10–3.13, runs on PRs touching `llamaindex/**`) | `.github/workflows/release-llamaindex.yml` (triggered by `llamaindex-v*` tags, publishes to PyPI via OIDC) |
+| LangChain loader | `.github/workflows/test-langchain.yml` (matrix 3.10–3.13, runs on PRs touching `langchain/**`) | `.github/workflows/release-langchain.yml` (triggered by `langchain-v*` tags, publishes to PyPI via OIDC) |
 | Claude Code plugin | — (no CI yet) | — (distributed via self-hosted marketplace; no PyPI publish) |
 
 ### Pre-flight checklist (before tagging any release)

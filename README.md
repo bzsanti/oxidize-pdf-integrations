@@ -26,9 +26,29 @@ Add the marketplace and install:
 - Python 3.10+
 - `oxidize-pdf` is auto-installed if not found in your environment
 
+## LlamaIndex Reader
+
+Document reader for [LlamaIndex](https://github.com/run-llama/llama_index) RAG pipelines, packaged as `llama-index-readers-oxidize-pdf`.
+
+```bash
+pip install llama-index-readers-oxidize-pdf
+```
+
+See [`llamaindex/README.md`](./llamaindex/README.md) for usage.
+
+## LangChain Loader
+
+Document loader for [LangChain](https://github.com/langchain-ai/langchain) RAG pipelines, packaged as `langchain-oxidize-pdf`.
+
+```bash
+pip install langchain-oxidize-pdf
+```
+
+See [`langchain/README.md`](./langchain/README.md) for usage.
+
 ## Other Integrations
 
-Future integrations (VS Code, JetBrains, Cursor) will live in separate subdirectories.
+Future integrations (Haystack, VS Code, JetBrains, Cursor) will live in separate subdirectories.
 
 ## License
 

@@ -3,6 +3,17 @@
 This repo hosts multiple integrations; each section is scoped per integration.
 See [RELEASING.md](./RELEASING.md) for tag and versioning conventions.
 
+## [langchain-v0.1.0] - 2026-04-24
+
+### Added
+- New `langchain/` sub-package — `langchain-oxidize-pdf` on PyPI.
+- `OxidizePdfLoader(BaseLoader)` with three modes: `rag` (default, one `Document` per semantic chunk with `heading_context`, `element_types`, `page_numbers`, `token_estimate`), `pages` (one `Document` per page), `markdown` (single `Document`, full PDF as markdown).
+- `lazy_load()` is the primary entry point returning a generator (not a materialized list), so large PDFs stream into downstream consumers without forcing full memory load. `load()` is inherited from LangChain's `BaseLoader` as the convenience materializer.
+- File path is bound at construction (`OxidizePdfLoader("paper.pdf", mode=..., extra_info=...)`) following the LangChain convention established by `PyPDFLoader`.
+- Adapter normalizes `page_numbers` to 1-indexed so metadata is consistent across modes and with `PyPDFLoader` expectations.
+- 29 behavior tests (35 including parametrizations) covering construction, all three modes, metadata shape, `extra_info` merging, path-vs-str inputs, laziness (iterator contract), and disjointness (7 semantic regression tests spanning single-page and multi-section PDFs) — shipped from day one to avoid repeating the LlamaIndex 0.1.0 accumulation regression.
+- Requires `langchain-core>=0.3,<0.4` and `oxidize-pdf>=0.4.3` (the `HybridChunker` disjointness fix from core 2.5.5).
+
 ## [llamaindex-v0.1.1] - 2026-04-22
 
 ### Fixed

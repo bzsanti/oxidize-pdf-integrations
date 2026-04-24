@@ -6,6 +6,7 @@ build-backend = "hatchling.build"
 name = "langchain-oxidize-pdf"
 version = "0.1.0"
 description = "LangChain document loader for oxidize-pdf — fast, Rust-powered PDF parsing with element-disjoint RAG chunking"
+readme = "README.md"
 requires-python = ">=3.10,<4.0"
 license = { text = "MIT" }
 authors = [

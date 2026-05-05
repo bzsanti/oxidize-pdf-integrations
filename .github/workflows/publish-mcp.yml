@@ -69,15 +69,18 @@ jobs:
       - name: Verify registry shows new version
         run: |
           set -euo pipefail
+          # The registry's search endpoint returns ALL versions of a server,
+          # ordered oldest-first. Filter to the entry flagged as isLatest=true
+          # (the registry only marks one version per server with that flag).
           for attempt in 1 2 3 4 5; do
             CURRENT=$(curl -sf "https://registry.modelcontextprotocol.io/v0/servers?search=io.github.bzsanti%2Foxidize-pdf-mcp" \
-              | jq -r '.servers[0].version // empty')
+              | jq -r '[.servers[] | select(._meta["io.modelcontextprotocol.registry/official"].isLatest == true)] | .[0].server.version // empty')
             if [ "$CURRENT" = "$RELEASE_VERSION" ]; then
-              echo "Registry confirms ${CURRENT}."
+              echo "Registry confirms ${CURRENT} as the latest version."
               exit 0
             fi
-            echo "Attempt ${attempt}: registry shows '${CURRENT:-<missing>}', expected '${RELEASE_VERSION}'. Waiting 10s..."
+            echo "Attempt ${attempt}: registry's latest is '${CURRENT:-<missing>}', expected '${RELEASE_VERSION}'. Waiting 10s..."
             sleep 10
           done
-          echo "::error::Registry did not surface ${RELEASE_VERSION} after ~50 seconds."
+          echo "::error::Registry did not surface ${RELEASE_VERSION} as latest after ~50 seconds."
           exit 1

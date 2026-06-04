@@ -3,6 +3,11 @@
 This repo hosts multiple integrations; each section is scoped per integration.
 See [RELEASING.md](./RELEASING.md) for tag and versioning conventions.
 
+## [mcp-v0.7.0] - 2026-06-04
+
+### Changed
+- Track `oxidize-pdf` **0.7.0** (was 0.5.0): `mcp/server.json` `version` and `packages[0].version` bumped to 0.7.0. The MCP server runs the `oxidize-mcp` entry point shipped in the `oxidize-pdf` PyPI wheel, so this pins the registry entry to the 0.7.0 bridge — bringing upstream `oxidize-pdf` 2.12.0, GFX-019 colour spaces, the `add_page`-by-reference fix (#80), custom-font measurement (#78), and glyph-coverage diagnostics (#287). Published to the MCP Registry via the `publish-mcp` workflow (`workflow_dispatch`, version `0.7.0`).
+
 ## [langchain-v0.1.0] - 2026-04-24
 
 ### Added

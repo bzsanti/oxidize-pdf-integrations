@@ -3,6 +3,11 @@
 This repo hosts multiple integrations; each section is scoped per integration.
 See [RELEASING.md](./RELEASING.md) for tag and versioning conventions.
 
+## [mcp-v0.8.0] - 2026-06-08
+
+### Changed
+- Track `oxidize-pdf` **0.8.0** (was 0.7.0): `mcp/server.json` `version` and `packages[0].version` bumped to 0.8.0. The MCP server runs the `oxidize-mcp` entry point shipped in the `oxidize-pdf` PyPI wheel, so this pins the registry entry to the 0.8.0 bridge — bringing upstream `oxidize-pdf` 2.13.0, per-chunk/document RAG language detection (#293), the token-efficient and JSON chunk exporters (#291), the `prefer_ruling_tables` partition flag (#292), and the `/SMask` alpha + flate-ratio image-extraction fixes (#286). MSRV raised to Rust 1.88. Published to the MCP Registry via the `publish-mcp` workflow (`workflow_dispatch`, version `0.8.0`).
+
 ## [mcp-v0.7.0] - 2026-06-04
 
 ### Changed

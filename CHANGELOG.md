@@ -3,6 +3,11 @@
 This repo hosts multiple integrations; each section is scoped per integration.
 See [RELEASING.md](./RELEASING.md) for tag and versioning conventions.
 
+## [mcp-v0.9.0] - 2026-06-11
+
+### Changed
+- Track `oxidize-pdf` **0.9.0** (was 0.8.0): `mcp/server.json` `version` and `packages[0].version` bumped to 0.9.0. The MCP server runs the `oxidize-mcp` entry point shipped in the `oxidize-pdf` PyPI wheel, so this pins the registry entry to the 0.9.0 bridge — bringing upstream `oxidize-pdf` 2.14.0 with real axial/radial gradient rendering (a shading now emits a proper PDF `/Function` Type 2/Type 3 plus `/ColorSpace` instead of the placeholder `/Function 1`, #297) exposed through the new `Page.add_shading` / `Page.paint_shading` / `Page.clip` / `Page.clip_even_odd` / `Page.end_path` paint path, plus inherited text-extraction fixes: word scramble in dense and multi-column documents (#302, #305), the `DocumentChunker::chunk_text` infinite-loop guard (#308), and non-ASCII WinAnsi glyph measurement corrections (#309, #313). Published to the MCP Registry via the `publish-mcp` workflow (`workflow_dispatch`, version `0.9.0`).
+
 ## [mcp-v0.8.0] - 2026-06-08
 
 ### Changed

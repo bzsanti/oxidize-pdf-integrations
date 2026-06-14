@@ -3,6 +3,11 @@
 This repo hosts multiple integrations; each section is scoped per integration.
 See [RELEASING.md](./RELEASING.md) for tag and versioning conventions.
 
+## [mcp-v0.10.0] - 2026-06-14
+
+### Changed
+- Track `oxidize-pdf` **0.10.0** (was 0.9.0): `mcp/server.json` `version` and `packages[0].version` bumped to 0.10.0. The MCP server runs the `oxidize-mcp` entry point shipped in the `oxidize-pdf` PyPI wheel, so this pins the registry entry to the 0.10.0 bridge — bringing upstream `oxidize-pdf` 2.15.0 with the new `IncrementalFormFiller`: AcroForm fields are filled on an already-serialized PDF by appending an ISO 32000-1 §7.5.6 incremental update (original bytes preserved verbatim, only the modified field objects and `/AcroForm` rewritten in a new revision with a partial cross-reference section, chained `/Prev` and regenerated `/ID`, #318), plus inherited text-extraction fixes (#319): content-stream parsing is now best-effort (a single malformed operator no longer discards a whole page) and text drawn inside a Form XObject invoked with `Do` is now extracted (277 files recover previously-dropped text in the upstream 9051-PDF corpus). Published to the MCP Registry via the `publish-mcp` workflow (`workflow_dispatch`, version `0.10.0`).
+
 ## [mcp-v0.9.0] - 2026-06-11
 
 ### Changed

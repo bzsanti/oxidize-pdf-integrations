@@ -3,6 +3,11 @@
 This repo hosts multiple integrations; each section is scoped per integration.
 See [RELEASING.md](./RELEASING.md) for tag and versioning conventions.
 
+## [mcp-v0.12.0] - 2026-06-21
+
+### Changed
+- Track `oxidize-pdf` **0.12.0** (was 0.11.0): `mcp/server.json` `version` and `packages[0].version` bumped to 0.12.0. The MCP server runs the `oxidize-mcp` entry point shipped in the `oxidize-pdf` PyPI wheel, so this pins the registry entry to the 0.12.0 bridge — an MCP-only release that overhauls the Tool Definition Quality of all 12 tools (no upstream change, `oxidize-pdf` stays 2.16.3). Every tool now ships per-parameter descriptions (units in PDF points, 0-based page indices, bottom-left coordinate origin, defaults, mode applicability), MCP `ToolAnnotations` (`title`, `readOnlyHint`, `destructiveHint`, `idempotentHint`, `openWorldHint=False`), descriptions that distinguish sibling tools and state when to use each (and the alternative when not), and honest behavioural/return disclosure. Free-form mode parameters (`operation`, `check`, `content_type`, `compliance_level`, `page_size`, `annotation_type`) are now `Literal` enums surfaced in the JSON schema, so an unknown value is rejected by schema validation before the tool runs. This raises Glama's Tool Definition Quality Score for the listed server. Published to the MCP Registry via the `publish-mcp` workflow (`workflow_dispatch`, version `0.12.0`).
+
 ## [mcp-v0.11.0] - 2026-06-21
 
 ### Changed

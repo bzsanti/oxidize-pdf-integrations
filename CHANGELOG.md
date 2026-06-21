@@ -3,6 +3,11 @@
 This repo hosts multiple integrations; each section is scoped per integration.
 See [RELEASING.md](./RELEASING.md) for tag and versioning conventions.
 
+## [mcp-v0.11.0] - 2026-06-21
+
+### Changed
+- Track `oxidize-pdf` **0.11.0** (was 0.10.0): `mcp/server.json` `version` and `packages[0].version` bumped to 0.11.0. The MCP server runs the `oxidize-mcp` entry point shipped in the `oxidize-pdf` PyPI wheel, so this pins the registry entry to the 0.11.0 bridge — bringing upstream `oxidize-pdf` 2.16.3 with the new experimental Analysis SPI surfaced in `oxidize_pdf.experimental` (`AnalysisPipeline` builder + `PdfReader.rag_chunks_with_pipeline` for pluggable chunking/classification/metadata-enrichment, semver-exempt matching the upstream `unstable-spi` contract), the always-on enriched `RagChunk` metadata (21 new getters: `heading_path`, `dominant_font[_size]`, `is_bold`/`is_italic`, `content_types`, char/word/sentence counts, ISO 639-3 language detection, `chunk_id` chain, `page_span`/`page_regions`), and document-source stamping. Inherited upstream 2.16.1–2.16.3 bug fixes (xref-stream double-decode #341, bounded-memory lenient parse #339, deterministic extraction/XMP #329/#331/#334) with no bridge API change. The native extension now ships a single abi3 (stable ABI) `cp310-abi3` wheel covering Python 3.10+, which also resolved the Windows 3.13 link failure (LNK1181 `python313.lib`). Non-breaking, additive at the stable API level. Published to the MCP Registry via the `publish-mcp` workflow (`workflow_dispatch`, version `0.11.0`).
+
 ## [mcp-v0.10.0] - 2026-06-14
 
 ### Changed

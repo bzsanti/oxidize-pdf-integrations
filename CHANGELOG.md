@@ -3,6 +3,11 @@
 This repo hosts multiple integrations; each section is scoped per integration.
 See [RELEASING.md](./RELEASING.md) for tag and versioning conventions.
 
+## [mcp-v0.13.0] - 2026-06-26
+
+### Changed
+- Track `oxidize-pdf` **0.13.0** (was 0.12.0): `mcp/server.json` `version` and `packages[0].version` bumped to 0.13.0. The MCP server runs the `oxidize-mcp` entry point shipped in the `oxidize-pdf` PyPI wheel, so this pins the registry entry to the 0.13.0 bridge — which upgrades the underlying engine to upstream `oxidize-pdf` **3.0.1** (was 2.16.3) and adds a CID-keyed positioned-glyph-run write API (issue #358): the library can embed pre-shaped glyph runs as Identity-H Type0/CIDFontType2 fonts addressed by glyph id, with per-glyph kerning/offset and a `ToUnicode` CMap that keeps the text extractable (`CidMapping`, `CidShowElement`, `Document.add_cid_keyed_font`, `Page.set_custom_font`, `Page.show_cid_array`). The two upstream 3.0.0 breaking changes touch only low-level font modules the bridge never used, so no MCP tool's input/output contract changes. This release also corrects the `convert_pdf` tool definition: the `max_tokens` parameter description claimed it applied to `format='rag'`, but the RAG path uses heading-aware semantic chunking with a fixed internal budget and ignores `max_tokens`; the description now states it applies to `format='chunks'` only. All 12 tools still pass the Tool Definition Quality suite (72/72). Published to the MCP Registry via the `publish-mcp` workflow (`workflow_dispatch`, version `0.13.0`).
+
 ## [mcp-v0.12.0] - 2026-06-21
 
 ### Changed

@@ -3,6 +3,29 @@
 This repo hosts multiple integrations; each section is scoped per integration.
 See [RELEASING.md](./RELEASING.md) for tag and versioning conventions.
 
+## [mcp-v0.19.0] - 2026-09-24
+
+### Changed
+- Synchronize the canonical `mcp/server.json` server and package versions with
+  the published `oxidize-pdf` 0.19.0 release (Rust core 5.1.3). The MCP registry
+  already published this version through the `publish-mcp` workflow; that
+  workflow updates its temporary checkout but does not commit the manifest.
+- Run the LangChain, LlamaIndex and Haystack test matrices when the MCP manifest
+  changes, installing exactly the bridge version declared in that manifest.
+- Document the Git manifest update as part of the MCP release procedure.
+
+### Compatibility
+- Existing adapter dependency ranges already accept 0.19.0. The adapters use
+  text extraction, Markdown export and RAG chunking; they do not use the
+  `MergeOptions` preservation flags changed in 0.19.0.
+- The new Python extraction options and rendering-mode metadata are not exposed
+  as new adapter parameters or MCP tool parameters in this update.
+
+### Validation
+- Against the published 0.19.0 wheel on Linux / Python 3.12: LangChain 35 tests,
+  LlamaIndex 29 tests and Haystack 41 tests passed. Framework versions were
+  `langchain-core` 0.3.86, `llama-index-core` 0.14.25 and `haystack-ai` 2.31.0.
+
 ## [mcp-v0.13.0] - 2026-06-26
 
 ### Changed

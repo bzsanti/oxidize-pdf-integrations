@@ -11,8 +11,14 @@
       "name": "oxidize-pdf",
       "source": "./claude-code",
       "description": "PDF reading, creation, analysis, manipulation, and security for Claude Code",
-      "version": "1.0.0",
-      "keywords": ["pdf", "document", "analysis", "creation", "manipulation"],
+      "version": "1.1.0",
+      "keywords": [
+        "pdf",
+        "document",
+        "analysis",
+        "creation",
+        "manipulation"
+      ],
       "category": "tools"
     }
   ]

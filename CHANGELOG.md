@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased — MCP SDK v2 / Python 0.20.0
+
+- Install the MCP extra and verify SDK 2 / FastMCP 4 before reusing an environment.
+- Pin the registry runtime source including `[mcp]` and keep it synchronized during publication.
+- Repair files lost during pip upgrades from FastMCP 3 to the FastMCP 4/slim distribution; confirm readiness before reporting success.
+- Send launcher startup errors to stderr to preserve protocol stdout.
+- Add launcher contracts and an optional clean candidate-wheel integration workflow.
+
 This repo hosts multiple integrations; each section is scoped per integration.
 See [RELEASING.md](./RELEASING.md) for tag and versioning conventions.
 

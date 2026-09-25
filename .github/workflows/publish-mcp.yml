@@ -39,7 +39,7 @@ jobs:
         run: |
           set -euo pipefail
           jq --arg v "$RELEASE_VERSION" \
-            '.version = $v | .packages[0].version = $v' \
+            '.version = $v | .packages[0].version = $v | (.packages[0].runtimeArguments[] | select(.name == "--from").value) = ("oxidize-pdf[mcp]==" + $v)' \
             server.json > server.json.tmp
           mv server.json.tmp server.json
           echo "── Patched server.json ──"

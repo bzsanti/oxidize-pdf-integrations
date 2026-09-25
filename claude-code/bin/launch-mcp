@@ -25,9 +25,16 @@ find_python() {
     fi
 }
 
-has_oxidize() {
+has_mcp() {
     local py="$1"
-    "$py" -c "import oxidize_pdf" &>/dev/null 2>&1
+    "$py" -c '
+from importlib.metadata import version
+from packaging.version import Version
+from oxidize_pdf.mcp.server import run
+assert Version("0.20") <= Version(version("oxidize-pdf")) < Version("0.21")
+assert version("mcp").split(".")[0] == "2"
+assert version("fastmcp").split(".")[0] == "4"
+' &>/dev/null 2>&1
 }
 
 file_age_seconds() {
@@ -55,35 +62,49 @@ record_upgrade() {
     [ -n "$PLUGIN_DATA" ] && touch "$STAMP_FILE" 2>/dev/null || true
 }
 
+install_mcp() {
+    "$VENV_DIR/bin/pip" install --quiet --upgrade 'oxidize-pdf[mcp]>=0.20,<0.21'
+    if ! has_mcp "$VENV_DIR/bin/python"; then
+        # FastMCP 4 moved its modules to fastmcp-slim. During a v3 upgrade,
+        # pip can install slim before uninstalling v3, deleting shared files.
+        local fastmcp_version
+        fastmcp_version=$("$VENV_DIR/bin/python" -c 'from importlib.metadata import version; print(version("fastmcp"))')
+        "$VENV_DIR/bin/pip" install --quiet --force-reinstall --no-deps "fastmcp-slim==$fastmcp_version"
+    fi
+    if ! has_mcp "$VENV_DIR/bin/python"; then
+        echo "[oxidize-pdf] ERROR: MCP server could not be imported after installation." >&2
+        return 1
+    fi
+    record_upgrade
+}
+
 ensure_venv() {
     local py="$1"
     if [ ! -d "$VENV_DIR" ]; then
         echo "[oxidize-pdf] Installing into plugin environment..."
         "$py" -m venv "$VENV_DIR"
     fi
-    "$VENV_DIR/bin/pip" install --quiet --upgrade oxidize-pdf
-    record_upgrade
+    install_mcp
 }
 
 PYTHON=$(find_python)
 if [ -z "$PYTHON" ]; then
-    echo "[oxidize-pdf] ERROR: Python 3.10+ is required but not found in PATH."
+    echo "[oxidize-pdf] ERROR: Python 3.10+ is required but not found in PATH." >&2
     exit 1
 fi
 
 MODE="${1:-serve}"
 
 if [ "$MODE" = "check" ]; then
-    if has_oxidize "$PYTHON"; then
+    if has_mcp "$PYTHON"; then
         echo "[oxidize-pdf] Found in current environment."
         exit 0
     fi
     if [ -n "$PLUGIN_DATA" ]; then
-        if [ -d "$VENV_DIR" ] && has_oxidize "$VENV_DIR/bin/python"; then
+        if [ -d "$VENV_DIR" ] && has_mcp "$VENV_DIR/bin/python"; then
             if should_upgrade; then
                 echo "[oxidize-pdf] Checking for updates..."
-                "$VENV_DIR/bin/pip" install --quiet --upgrade oxidize-pdf
-                record_upgrade
+                install_mcp
                 echo "[oxidize-pdf] Up to date in plugin environment."
             else
                 echo "[oxidize-pdf] Found in plugin environment."
@@ -94,18 +115,18 @@ if [ "$MODE" = "check" ]; then
         echo "[oxidize-pdf] Installed in plugin environment."
         exit 0
     fi
-    echo "[oxidize-pdf] Not found. Install with: pip install oxidize-pdf"
+    echo "[oxidize-pdf] Not found. Install with: pip install 'oxidize-pdf[mcp]>=0.20,<0.21'"
     exit 1
 fi
 
 if [ "$MODE" = "serve" ]; then
-    if has_oxidize "$PYTHON"; then
+    if has_mcp "$PYTHON"; then
         exec "$PYTHON" -c "from oxidize_pdf.mcp.server import run; run()"
     fi
-    if [ -n "$PLUGIN_DATA" ] && [ -d "$VENV_DIR" ] && has_oxidize "$VENV_DIR/bin/python"; then
+    if [ -n "$PLUGIN_DATA" ] && [ -d "$VENV_DIR" ] && has_mcp "$VENV_DIR/bin/python"; then
         exec "$VENV_DIR/bin/python" -c "from oxidize_pdf.mcp.server import run; run()"
     fi
-    echo "[oxidize-pdf] ERROR: oxidize-pdf not found. Run '/oxidize-pdf:read-pdf' to trigger setup or install manually: pip install oxidize-pdf"
+    echo "[oxidize-pdf] ERROR: oxidize-pdf not found. Run '/oxidize-pdf:read-pdf' to trigger setup or install manually: pip install 'oxidize-pdf[mcp]>=0.20,<0.21'" >&2
     exit 1
 fi
 

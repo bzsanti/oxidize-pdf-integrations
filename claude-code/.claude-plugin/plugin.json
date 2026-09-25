@@ -1,6 +1,6 @@
 {
   "name": "oxidize-pdf",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "PDF reading, creation, analysis, manipulation, and security powered by oxidize-pdf",
   "author": {
     "name": "BelowZero",
@@ -9,5 +9,14 @@
   "homepage": "https://github.com/bzsanti/oxidize-pdf-integrations",
   "repository": "https://github.com/bzsanti/oxidize-pdf-integrations",
   "license": "MIT",
-  "keywords": ["pdf", "document", "analysis", "creation", "manipulation", "security", "forms", "annotations"]
+  "keywords": [
+    "pdf",
+    "document",
+    "analysis",
+    "creation",
+    "manipulation",
+    "security",
+    "forms",
+    "annotations"
+  ]
 }

@@ -3,7 +3,7 @@
   "name": "io.github.bzsanti/oxidize-pdf-mcp",
   "title": "oxidize-pdf MCP Server",
   "description": "MCP server for PDF generation, parsing, splitting, merging, and manipulation via oxidize-pdf",
-  "version": "0.19.0",
+  "version": "0.20.0",
   "repository": {
     "url": "https://github.com/bzsanti/oxidize-python",
     "source": "github"
@@ -12,7 +12,7 @@
     {
       "registryType": "pypi",
       "identifier": "oxidize-pdf",
-      "version": "0.19.0",
+      "version": "0.20.0",
       "runtimeHint": "uvx",
       "transport": {
         "type": "stdio"
@@ -21,6 +21,13 @@
         {
           "type": "positional",
           "value": "oxidize-mcp"
+        }
+      ],
+      "runtimeArguments": [
+        {
+          "type": "named",
+          "name": "--from",
+          "value": "oxidize-pdf[mcp]==0.20.0"
         }
       ]
     }

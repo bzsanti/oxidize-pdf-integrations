@@ -1,0 +1,50 @@
+name: Test MCP packaging
+on:
+  pull_request:
+    paths: ["claude-code/**", "mcp/**", "tests/**", ".github/workflows/test-mcp.yml", ".github/workflows/publish-mcp.yml"]
+  push:
+    branches: [main]
+    paths: ["claude-code/**", "mcp/**", "tests/**", ".github/workflows/test-mcp.yml"]
+  workflow_dispatch:
+    inputs:
+      bridge_ref:
+        description: "oxidize-python branch/tag to build for clean installation tests"
+        default: "develop"
+        required: true
+permissions:
+  contents: read
+jobs:
+  contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pytest jsonschema
+      - run: pytest tests/ -q
+      - name: Validate registry schema
+        run: |
+          curl -fsSL https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json -o /tmp/server.schema.json
+          python -c 'import json,jsonschema; jsonschema.validate(json.load(open("mcp/server.json")), json.load(open("/tmp/server.schema.json")))'
+  clean-install:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: integrations
+      - uses: actions/checkout@v4
+        with:
+          repository: bzsanti/oxidize-python
+          ref: ${{ inputs.bridge_ref }}
+          path: bridge
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: astral-sh/setup-uv@v6
+      - run: pip install maturin
+      - run: maturin build --locked --out wheel
+        working-directory: bridge
+      - run: python bridge/scripts/check_mcp_install.py bridge/wheel/*.whl --integrations-dir integrations

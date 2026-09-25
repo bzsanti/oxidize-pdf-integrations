@@ -24,7 +24,7 @@ Add the marketplace and install:
 ### Requirements
 
 - Python 3.10+
-- `oxidize-pdf` is auto-installed if not found in your environment
+- `oxidize-pdf[mcp]>=0.20,<0.21` is auto-installed in the plugin environment when a compatible MCP server is unavailable (SDK 2 / FastMCP 4). The base library alone is insufficient.
 
 ## LlamaIndex Reader
 
